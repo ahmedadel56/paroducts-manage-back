@@ -1,0 +1,2 @@
+class BillProduct < ApplicationRecord
+end
