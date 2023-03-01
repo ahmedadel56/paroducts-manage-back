@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  total_before_discount: 1.5
+  total_dicount_percentage: 1.5
+  total_discount_value: 1.5
+  total_after_discount: 1.5
+  paied: 1.5
+  date: 2023-03-01
+  left: 1.5
+  debit: 1.5
+  total_debit: 1.5
+
+two:
+  total_before_discount: 1.5
+  total_dicount_percentage: 1.5
+  total_discount_value: 1.5
+  total_after_discount: 1.5
+  paied: 1.5
+  date: 2023-03-01
+  left: 1.5
+  debit: 1.5
+  total_debit: 1.5
