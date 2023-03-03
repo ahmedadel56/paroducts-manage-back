@@ -1,7 +1,7 @@
 class BillsController < ApplicationController
     def index
         # Display a list of all Bills
-        @bills = Bill.all
+        @bills = Bill.includes(:bill_products)
         render json: @bills
       end
     

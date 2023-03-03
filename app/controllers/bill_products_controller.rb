@@ -41,6 +41,6 @@ class BillProductsController < ApplicationController
       private
     
       def bill_product_params
-        params.require(:bill_product).permit(:attribute1, :attribute2, :attribute3)
+        params.require(:bill_product).permit(:product_id, :bill_id, :price, :discount, :quantity, :total_price)
       end
 end

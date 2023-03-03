@@ -7,10 +7,19 @@ class CategoriesController < ApplicationController
     
       def show
         # Display a specific Category
-        @category = Category.find(params[:id])
-        render json: @category
+        if params[:id] == "undefined"
+          @category = Category.includes(:products).first
+          render json: @category.products
+        else
+          @category = Category.includes(:products).find(params[:id])
+          render json: {status:201, content: @category.products}
+        end
       end
-    
+
+      def new
+        @category = Category.new(category_params)
+      end
+
       def create
         # Save a new Category to the database
         @category = Category.new(category_params)
@@ -41,6 +50,6 @@ class CategoriesController < ApplicationController
       private
     
       def category_params
-        params.require(:category).permit(:attribute1, :attribute2, :attribute3)
+        params.require(:category).permit(:name)
       end
 end
