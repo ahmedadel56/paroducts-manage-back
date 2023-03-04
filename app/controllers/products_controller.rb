@@ -25,17 +25,22 @@ class ProductsController < ApplicationController
         # Update a specific Product in the database
         @product = Product.find(params[:id])
         if @product.update(product_params)
-          render json: @product
+          render json: {status: 201, massage: "product updated successfully"}
         else
-          render json: @product.errors, status: :unprocessable_entity
+          render json: {status: 201, massage: "product is not updated "}
+          head :no_content
         end
       end
     
       def destroy
         # Delete a specific Product from the database
         @product = Product.find(params[:id])
-        @product.destroy
-        head :no_content
+        if @product.destroy
+          render json: {status: 201, massage: "product removed successfully"}
+        else
+          render json: {status: 201, massage: "product is not removed "}
+          head :no_content
+        end 
       end
     
       private
