@@ -13,9 +13,9 @@ class BillsController < ApplicationController
     
       def create
         # Save a new Bill to the database
-        @bill = Bill.new(bill_params)
+        @bill = Bill.new
         if @bill.save
-          render json: @bill, status: :created
+          render json: {status:201, id: @bill.id}
         else
           render json: @bill.errors, status: :unprocessable_entity
         end
@@ -41,6 +41,7 @@ class BillsController < ApplicationController
       private
     
       def bill_params
-        params.require(:bill).permit(:attribute1, :attribute2, :attribute3)
+        params.require(:bill).permit(:total_before_discount, :total_dicount_percentage, :total_discount_value,
+           :total_after_discount, :paied, :date, :left, :debit, :total_debit, :customer_id)
       end
 end

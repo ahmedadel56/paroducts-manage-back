@@ -33,14 +33,20 @@ class BillProductsController < ApplicationController
     
       def destroy
         # Delete a specific BillProduct from the database
-        @bill_product = BillProduct.find(params[:id])
-        @bill_product.destroy
-        head :no_content
+        @bill_product = BillProduct.where(remove_bill_products_params).first
+        if @bill_product.destroy
+          render json: {status: 201, massage: "Bill Item successfully removed"}
+        else
+          render json: {status:400, massage: "something went wrong"}
+        end
       end
     
       private
     
       def bill_product_params
         params.require(:bill_product).permit(:product_id, :bill_id, :price, :discount, :quantity, :total_price)
+      end
+      def remove_bill_products_params
+        { product_id: params[:product_id], bill_id: params[:bill_id] }
       end
 end
