@@ -1,4 +1,6 @@
 class CategoriesController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
     def index
         # Display a list of all Categorys
         @categories = Category.all
@@ -8,11 +10,13 @@ class CategoriesController < ApplicationController
       def show
         # Display a specific Category
         if params[:id] == "undefined"
-          @category = Category.includes(:products).first
+          @category = Category.includes(:products).where(products: {offline: false}).first
           render json: @category.products
-        else
-          @category = Category.includes(:products).find(params[:id])
+        elsif params[:id] != "undefined"
+          @category = Category.includes(:products).where(products: {offline: false}).find(params[:id])
           render json: {status:201, content: @category.products}
+        else
+          record_not_found
         end
       end
 
@@ -47,6 +51,9 @@ class CategoriesController < ApplicationController
         head :no_content
       end
     
+      def record_not_found
+        render json: {status:404}
+      end
       private
     
       def category_params
