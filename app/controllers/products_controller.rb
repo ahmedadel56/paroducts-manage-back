@@ -1,8 +1,13 @@
 class ProductsController < ApplicationController
     def index
         # Display a list of all Products
-        @products = Product.all
-        render json: @products
+        if params[:name].present? && params[:name].match(/[a-zA-Z0-9]/)
+          search_term = params[:name].strip
+          @products = Product.where("name LIKE ?", "%#{search_term}%")
+          render json: {status: 201, content: @products}
+        else
+          render json: {status: 400, error: "Please enter a valid search term that contains at least one letter."}
+        end
       end
     
       def show
