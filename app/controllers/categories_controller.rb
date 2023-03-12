@@ -9,13 +9,13 @@ class CategoriesController < ApplicationController
     
       def show
         # Display a specific Category
-        if params[:id] == "undefined"
+        if params[:id].present? && params[:id].match(/[0-9]/)
+            @category = Category.includes(:products).where(products: {offline: false}).find(params[:id])
+            render json: {status:201, content: @category.products}  
+        elsif params[:id].present? && params[:id] == "first"
           @category = Category.includes(:products).where(products: {offline: false}).first
-          render json: @category.products
-        elsif params[:id] != "undefined"
-          @category = Category.includes(:products).where(products: {offline: false}).find(params[:id])
-          render json: {status:201, content: @category.products}
-        else
+          render json: {status:201, content: @category.products}  
+        else 
           record_not_found
         end
       end

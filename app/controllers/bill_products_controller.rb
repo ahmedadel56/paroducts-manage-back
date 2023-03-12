@@ -15,6 +15,9 @@ class BillProductsController < ApplicationController
         # Save a new BillProduct to the database
         @bill_product = BillProduct.new(bill_product_params)
         if @bill_product.save
+          product = @bill_product.product
+          product.quantity -= @bill_product.quantity
+          product.save
           render json: @bill_product, status: :created
         else
           render json: @bill_product.errors, status: :unprocessable_entity
@@ -35,9 +38,14 @@ class BillProductsController < ApplicationController
         # Delete a specific BillProduct from the database
         @bill_product = BillProduct.where(remove_bill_products_params).first
         if @bill_product.destroy
-          render json: {status: 201, massage: "Bill Item successfully removed"}
+          # Update the product quantity
+          product = @bill_product.product
+          product.quantity += @bill_product.quantity
+          product.save
+      
+          render json: { status: 201, message: "Bill Item successfully removed" }
         else
-          render json: {status:400, massage: "something went wrong"}
+          render json: { status: 400, message: "something went wrong" }
         end
       end
     
