@@ -34,6 +34,14 @@ class BillsController < ApplicationController
       def destroy
         # Delete a specific Bill from the database
         @bill = Bill.find(params[:id])
+
+        # Loop through all the bill_products associated with the bill
+        @bill.bill_products.each do |bill_product|
+          # Update the product quantity
+          product = bill_product.product
+          product.quantity += bill_product.quantity
+          product.save
+        end
         @bill.destroy
         head :no_content
       end
