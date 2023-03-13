@@ -33,7 +33,8 @@ class BillsController < ApplicationController
     
       def destroy
         # Delete a specific Bill from the database
-        @bill = Bill.find(params[:id])
+        @bill = Bill.includes(:customer, :bill_products).find(params[:id])
+        @customer = @bill.customer
 
         # Loop through all the bill_products associated with the bill
         @bill.bill_products.each do |bill_product|
@@ -42,8 +43,9 @@ class BillsController < ApplicationController
           product.quantity += bill_product.quantity
           product.save
         end
-        @bill.destroy
-        head :no_content
+        if @bill.destroy
+          @customer.update(total_debits: @customer.total_debits - @bill.left)
+        end
       end
     
       private

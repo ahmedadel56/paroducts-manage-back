@@ -1,7 +1,16 @@
 class CustomersController < ApplicationController
     def index
         # Display a list of all Customers
-        @customers = Customer.all
+        # @customers = Customer.all
+        if params[:phone_number].present? && params[:phone_number].match(/[0-9]/)
+         @customer_phone = params[:phone_number].strip
+          render json: {status: 201, content: Customer.where("phone_number LIKE ?", "%#{@customer_phone}%")}
+        elsif params[:name].present? && params[:name].match(/[a-zA-Z0-9]/)
+          search_term = params[:name].strip
+          render json: Customer.where("name LIKE ?", "%#{search_term}%")
+        else
+          render json: {status:404}
+        end
       end
     
       def show
@@ -33,9 +42,10 @@ class CustomersController < ApplicationController
         # Update a specific Customer in the database
         @customer = Customer.find(params[:id])
         if @customer.update(customer_params)
-          redirect_to customer_path(@customer)
+          render json: {status:201}
         else
-          render :edit
+          render json: {status:401}
+
         end
       end
     
