@@ -1,14 +1,15 @@
 class BillsController < ApplicationController
-    def index
+      def index
         # Display a list of all Bills
-        @bills = Bill.includes(:bill_products)
+        @bills = Bill.where(date: params[:date])
+        
         render json: @bills
       end
-    
+  
       def show
         # Display a specific Bill
-        @bill = Bill.find(params[:id])
-        render json: @bill
+        @bill = Bill.includes(:customer, :bill_products => :product).find(params[:id])
+        render json: @bill, include: {customer: {}, bill_products: { include: :product } }
       end
     
       def create
