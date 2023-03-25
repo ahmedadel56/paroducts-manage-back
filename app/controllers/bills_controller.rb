@@ -9,7 +9,15 @@ class BillsController < ApplicationController
       def show
         # Display a specific Bill
         @bill = Bill.includes(:customer, :bill_products => :product).find(params[:id])
-        render json: @bill, include: {customer: {}, bill_products: { include: :product } }
+      
+        # Check if the date is found
+        if @bill.created_at.present?
+          render json: {
+            bill: @bill,
+            status: 201
+          } else
+          render json: { error: 'Date not found', status: 404 }
+        end
       end
     
       def create
